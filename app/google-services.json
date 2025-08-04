@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "87312654111",
+    "project_id": "pebl-6db5a",
+    "storage_bucket": "pebl-6db5a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87312654111:android:ce28de5e8df0f3fd4d9a2a",
+        "android_client_info": {
+          "package_name": "com.rishabdhar12.pebl"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7j-8CXkm_Kp2vA_mmT2HTk-4PJBu7YOs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
