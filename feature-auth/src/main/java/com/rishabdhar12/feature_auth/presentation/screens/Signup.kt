@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.rishabdhar12.core.common.CustomButton
+import com.rishabdhar12.core.common.CustomLoadingButton
 import com.rishabdhar12.core.common.CustomOutlinedTextField
 import com.rishabdhar12.core.common.CustomText
 import com.rishabdhar12.core.common.TopBarWrapper
@@ -163,16 +164,10 @@ fun SignUpScreen(navController: NavController, modifier: Modifier = Modifier, vi
 
 
 
-            CustomButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-//                contentColor = Color.White,
-//                disabledContainerColor = lightGray,
-                text = "SIGN UP",
-//                onClick = {
-//                    loginViewModel.loginUser(emailFieldValue, passwordFieldValue)
-//                }
+            CustomLoadingButton (
+                text = "SIGNUP",
+                isLoading = false,
+                onClick = { viewModel.signInUser() }
             )
 
 

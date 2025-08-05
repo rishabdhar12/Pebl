@@ -1,18 +1,23 @@
 package com.rishabdhar12.feature_auth.presentation.screens
 
 import android.R.attr.enabled
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,7 +36,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.rishabdhar12.core.common.AlertDialogExample
 import com.rishabdhar12.core.common.CustomButton
+import com.rishabdhar12.core.common.CustomLoadingButton
 import com.rishabdhar12.core.common.CustomOutlinedTextField
 import com.rishabdhar12.core.common.CustomText
 import com.rishabdhar12.core.common.TopBarWrapper
@@ -49,7 +56,10 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier, vie
 
     var enabled by rememberSaveable { mutableStateOf(true) }
 
-    val authState by viewModel.authState.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val showDialog by viewModel.showDialog.collectAsState()
+    val authError by viewModel.authError
+
 
     TopBarWrapper(
         showBackButton = true,
@@ -122,42 +132,37 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier, vie
 
             Spacer(modifier = Modifier.padding(top = 20.dp))
 
-
-
-            CustomButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-//                contentColor = Color.White,
-//                disabledContainerColor = lightGray,
+            CustomLoadingButton (
                 text = "LOGIN",
-                onClick = {
-                    viewModel.signUpUser()
-                }
+                isLoading = isLoading,
+                onClick = { viewModel.signInUser() }
             )
 
-            Spacer(modifier = Modifier.padding(top = 12.dp))
+        }
+
+        Spacer(modifier = Modifier.padding(top = 12.dp))
 
 
-            CustomText(
-                text = "Forgot Password?",
-                fontWeight = FontWeight.Normal,
-                fontSize = 12.dp,
-                color = PeblColors.textColor,
-                modifier = Modifier
-                    .clickable(enabled = enabled) {
-                    },
+        CustomText(
+            text = "Forgot Password?",
+            fontWeight = FontWeight.Normal,
+            fontSize = 12.dp,
+            color = PeblColors.textColor,
+            modifier = Modifier
+                .clickable(enabled = enabled) {
+                },
+        )
+
+
+        if(showDialog){
+            AlertDialogExample(
+                onConfirmation = {
+                    viewModel.showDialog.value = false
+                },
+                dialogTitle = "Error",
+                dialogText = authError.toString(),
+                icon = Icons.Default.Warning,
             )
-
-//            authState?.let {
-//                if (it.isSuccess) {
-//                    CustomText("Success!", color = Color.Green)
-//                } else {
-//                    CustomText("Error: ${it.exceptionOrNull()?.message}", color = Color.Red)
-//                }
-//            }
-
-            // TODO: fetch proper error message and display as custom alert dialog
         }
     }
 }

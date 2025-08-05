@@ -1,7 +1,9 @@
 package com.rishabdhar12.feature_auth.presentation.viewmodel
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rishabdhar12.feature_auth.repo.AuthRepository
@@ -39,12 +41,30 @@ class AuthViewModel @Inject constructor(
     var mobileErrorMessage = mutableStateOf<String?>(null)
         private set
 
-    private val _authState = MutableStateFlow<Result<Unit>?>(null)
-    val authState = _authState.asStateFlow()
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
 
-    fun signUpUser() {
+
+    var authError = mutableStateOf<String?>(null)
+
+    var showDialog  = MutableStateFlow(false)
+
+
+    fun signInUser() {
         viewModelScope.launch {
-            authRepository.signIn(emailInput.value, passwordInput.value)
+            _isLoading.value = true
+            val result = authRepository.signIn(emailInput.value, passwordInput.value)
+
+            result.fold(
+                onSuccess = {
+                    authError.value = null
+                },
+                onFailure = { e ->
+                    showDialog.value = true
+                    authError.value = e.localizedMessage ?: "Something went wrong!"
+                }
+            )
+            _isLoading.value = false
         }
     }
 

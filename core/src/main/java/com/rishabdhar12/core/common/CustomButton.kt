@@ -1,5 +1,6 @@
 package com.rishabdhar12.core.common
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -17,21 +18,16 @@ fun CustomButton(
     containerColor: Color = PeblColors.buttonColor,
 //    contentColor: Color,
 //    disabledContainerColor: Color,
-    textColor: Color = PeblColors.backgroundColor,
     onClick: () -> Unit = {},
-    text: String,
     shape: RoundedCornerShape = RoundedCornerShape(10.dp),
+    content: @Composable RowScope.() -> Unit,
+
 ) {
     Button(modifier = modifier, colors = ButtonDefaults.buttonColors(
         containerColor = containerColor,
 //        contentColor = contentColor,
 //        disabledContainerColor = disabledContainerColor,
     ), shape = shape, onClick = onClick) {
-        CustomText(text = text,
-            letterSpacing = 1.dp,
-            fontSize = 16.dp,
-            fontWeight = FontWeight.ExtraBold,
-            color = textColor,
-            modifier = Modifier)
+        content()
     }
 }

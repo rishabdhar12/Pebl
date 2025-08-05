@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -17,6 +18,7 @@ fun CustomText(
     fontWeight: FontWeight = FontWeight.Normal,
     color: Color = Color.Unspecified,
     letterSpacing: Dp = 0.dp,
+    textAlign: TextAlign = TextAlign.Start,
     modifier: Modifier = Modifier
 ) {
     Text(
@@ -25,6 +27,7 @@ fun CustomText(
         color = color,
         fontWeight = fontWeight,
         letterSpacing = letterSpacing.value.sp,
+        textAlign = textAlign,
         modifier = modifier,
         style = MaterialTheme.typography.bodySmall.copy(
             lineHeight = 20.sp

@@ -14,10 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.rishabdhar12.core.common.AssetImage
 import com.rishabdhar12.core.common.CustomButton
+import com.rishabdhar12.core.common.CustomText
+import com.rishabdhar12.core.common.strings.PeblColors
 import com.rishabdhar12.core.common.strings.PeblIcons
 import com.rishabdhar12.core.routes.Routes
 
@@ -41,7 +44,17 @@ fun LoginOrSignupScreen(navController: NavController, modifier: Modifier = Modif
             Spacer(modifier = Modifier.height(24.dp))
 
             CustomButton(
-                text = "Log In",
+                content = {
+
+                    CustomText(
+                        text = "Log In",
+                        letterSpacing = 1.dp,
+                        fontSize = 16.dp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = PeblColors.backgroundColor,
+                        modifier = Modifier
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .height(48.dp),
@@ -52,7 +65,17 @@ fun LoginOrSignupScreen(navController: NavController, modifier: Modifier = Modif
             )
 
             CustomButton(
-                text = "Sign Up",
+                content = {
+
+                    CustomText(
+                        text = "Sign Up",
+                        letterSpacing = 1.dp,
+                        fontSize = 16.dp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = PeblColors.backgroundColor,
+                        modifier = Modifier
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .height(48.dp),
