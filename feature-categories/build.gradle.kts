@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.rishabdhar12.feature_auth"
+    namespace = "com.rishabdhar12.feature_categories"
     compileSdk = 36
 
     defaultConfig {
@@ -35,7 +35,6 @@ android {
 }
 
 dependencies {
-
     implementation(project(":core"))
     implementation(project(":services"))
 

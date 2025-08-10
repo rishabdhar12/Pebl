@@ -5,10 +5,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.rishabdhar12.core.routes.Routes
-import com.rishabdhar12.feature_auth.presentation.screens.LoginOrSignupScreen
-import com.rishabdhar12.feature_auth.presentation.screens.LoginScreen
-import com.rishabdhar12.feature_auth.presentation.screens.SignUpScreen
-import com.rishabdhar12.feature_auth.presentation.screens.SplashScreen
+import com.rishabdhar12.feature_auth.screens.LoginOrSignupScreen
+import com.rishabdhar12.feature_auth.screens.LoginScreen
+import com.rishabdhar12.feature_auth.screens.SignUpScreen
+import com.rishabdhar12.feature_auth.screens.SplashScreen
+import com.rishabdhar12.feature_categories.screens.SelectCategoriesScreen
 
 @Composable
 fun SetupNavGraph(navController: NavHostController) {
@@ -28,6 +29,10 @@ fun SetupNavGraph(navController: NavHostController) {
 
         composable(Routes.SignupRoute) {
             SignUpScreen(navController = navController)
+        }
+
+        composable(Routes.SelectCategoriesRoute) {
+            SelectCategoriesScreen(navController = navController)
         }
     }
 }

@@ -17,4 +17,13 @@ class FirebaseAuthService @Inject constructor(
             Result.failure(e)
         }
     }
+
+    suspend fun signUpWithEmail(email: String, password: String): Result<String> {
+        return try {
+            val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+            Result.success(result.user!!.uid)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

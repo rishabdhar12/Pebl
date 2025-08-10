@@ -1,17 +1,19 @@
-package com.rishabdhar12.feature_auth.presentation.screens
+package com.rishabdhar12.feature_auth.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -24,31 +26,41 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.rishabdhar12.core.common.CustomButton
+import com.rishabdhar12.core.common.CustomAlertDialog
 import com.rishabdhar12.core.common.CustomLoadingButton
 import com.rishabdhar12.core.common.CustomOutlinedTextField
 import com.rishabdhar12.core.common.CustomText
 import com.rishabdhar12.core.common.TopBarWrapper
 import com.rishabdhar12.core.common.strings.PeblColors
-import com.rishabdhar12.feature_auth.presentation.viewmodel.AuthViewModel
+import com.rishabdhar12.core.routes.Routes
+import com.rishabdhar12.feature_auth.viewmodel.AuthViewModel
 
 @Composable
-fun SignUpScreen(navController: NavController, modifier: Modifier = Modifier, viewModel: AuthViewModel = hiltViewModel()) {
-    var fullNameFieldValue by viewModel.fullNameInput
-    val fullNameErrorMessage by viewModel.fullNameErrorMessage
-
-    var mobileFieldValue by viewModel.mobileInput
-    val mobileErrorMessage by viewModel.mobileErrorMessage
+fun LoginScreen(navController: NavController, modifier: Modifier = Modifier, viewModel: AuthViewModel = hiltViewModel()) {
 
     val emailFieldValue by viewModel.emailInput
     val emailErrorMessage by viewModel.emailErrorMessage
 
     var passwordFieldValue by viewModel.passwordInput
-    var  passwordErrorMessage by viewModel.passwordErrorMessage
+    var passwordErrorMessage by viewModel.passwordErrorMessage
 
     var enabled by rememberSaveable { mutableStateOf(true) }
 
-    TopBarWrapper(
+    val isLoading by viewModel.isLoading.collectAsState()
+    val showDialog by viewModel.showDialog.collectAsState()
+    val authError by viewModel.authError
+    val isSignedIn by viewModel.isSignedIn.collectAsState()
+
+    LaunchedEffect(isSignedIn) {
+        if (isSignedIn == true) {
+            navController.navigate(Routes.SelectCategoriesRoute) {
+                popUpTo(Routes.LoginRoute) { inclusive = true }
+            }
+        }
+    }
+
+
+        TopBarWrapper(
         showBackButton = true,
         onBackClick = { navController.popBackStack() },
         title = "",
@@ -60,7 +72,7 @@ fun SignUpScreen(navController: NavController, modifier: Modifier = Modifier, vi
                 .padding(start = 20.dp, end = 20.dp, top = 80.dp)
         ) {
             CustomText(
-                text = "Sign Up",
+                text = "Login",
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 30.dp,
                 color = PeblColors.textColor,
@@ -73,59 +85,15 @@ fun SignUpScreen(navController: NavController, modifier: Modifier = Modifier, vi
             Spacer(modifier = Modifier.padding(top = 20.dp))
 
             CustomOutlinedTextField(
-                textFieldValue = fullNameFieldValue,
-                onValueChange =viewModel::onFullNameChanged,
-                labelText1 = "Enter Full Name",
-                labelText2 = "Full Name",
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done,
-            )
-            if(fullNameErrorMessage != null) {
-                CustomText(
-                    text = fullNameErrorMessage ?: "",
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 12.dp,
-                    color = Color.Red,
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .wrapContentSize(Alignment.CenterStart)
-                )
-            }
-
-            Spacer(modifier = Modifier.padding(top = 10.dp))
-
-            CustomOutlinedTextField(
-                textFieldValue = mobileFieldValue,
-                onValueChange = viewModel::onPhoneNumberChanged,
-                labelText1 = "Enter Phone Number",
-                labelText2 = "Phone Number",
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done,
-            )
-
-            if(mobileErrorMessage != null) {
-                CustomText(
-                    text = mobileErrorMessage ?: "",
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 12.dp,
-                    color = Color.Red,
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .wrapContentSize(Alignment.CenterStart)
-                )
-            }
-
-            Spacer(modifier = Modifier.padding(top = 10.dp))
-
-            CustomOutlinedTextField(
                 textFieldValue = emailFieldValue,
                 onValueChange = viewModel::onEmailChanged,
-                labelText1 = "Enter Email",
+                labelText1 = "Enter email",
                 labelText2 = "Email",
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Done,
             )
-            if(emailErrorMessage != null) {
+
+            if (emailErrorMessage != null) {
                 CustomText(
                     text = emailErrorMessage ?: "",
                     fontWeight = FontWeight.Normal,
@@ -142,13 +110,14 @@ fun SignUpScreen(navController: NavController, modifier: Modifier = Modifier, vi
             CustomOutlinedTextField(
                 textFieldValue = passwordFieldValue,
                 onValueChange = viewModel::onPasswordChanged,
-                labelText1 = "Enter password",
+                labelText1 = "Enter Password",
                 labelText2 = "Password",
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,
                 visualTransformation = PasswordVisualTransformation(),
             )
-            if(passwordErrorMessage != null) {
+
+            if (passwordErrorMessage != null) {
                 CustomText(
                     text = passwordErrorMessage ?: "",
                     fontWeight = FontWeight.Normal,
@@ -162,16 +131,41 @@ fun SignUpScreen(navController: NavController, modifier: Modifier = Modifier, vi
 
             Spacer(modifier = Modifier.padding(top = 20.dp))
 
-
-
             CustomLoadingButton (
-                text = "SIGNUP",
-                isLoading = false,
-                onClick = { viewModel.signInUser() }
+                text = "LOGIN",
+                isLoading = isLoading,
+                onClick = { viewModel.signInUser()
+
+//                    if(authError == null) {
+//                        navController.navigate(Routes.SelectCategoriesRoute)
+//                    }
+                }
             )
 
+            Spacer(modifier = Modifier.padding(top = 12.dp))
 
 
+            CustomText(
+                text = "Forgot Password?",
+                fontWeight = FontWeight.Normal,
+                fontSize = 12.dp,
+                color = PeblColors.textColor,
+                modifier = Modifier
+                    .clickable(enabled = enabled) {
+                    },
+            )
+
+        }
+
+        if(showDialog){
+            CustomAlertDialog(
+                onConfirmation = {
+                    viewModel.showDialog.value = false
+                },
+                dialogTitle = "Error",
+                dialogText = authError.toString(),
+                icon = Icons.Default.Warning,
+            )
         }
     }
 }

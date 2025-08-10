@@ -5,4 +5,5 @@ object Routes {
     const val LoginOrSignUpRoute = "login_or_signup_screen"
     const val LoginRoute = "login_screen"
     const val SignupRoute = "signup_screen"
+    const val SelectCategoriesRoute = "select_categories_route"
 }
