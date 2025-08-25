@@ -54,7 +54,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier, vie
     LaunchedEffect(isSignedIn) {
         if (isSignedIn == true) {
             navController.navigate(Routes.SelectCategoriesRoute) {
-                popUpTo(Routes.LoginRoute) { inclusive = true }
+                popUpTo(0) { inclusive = true }
             }
         }
     }

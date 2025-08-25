@@ -73,6 +73,10 @@ dependencies {
     implementation(libs.firebase.config)
 
     implementation (libs.play.services.base)
+
+    runtimeOnly(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
 }
 
 kapt {

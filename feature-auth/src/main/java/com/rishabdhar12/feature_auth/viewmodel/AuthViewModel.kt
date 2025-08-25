@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.rishabdhar12.feature_auth.dto.SignUpDTO
+import com.rishabdhar12.feature_auth.local.entity.UserEntity
 import com.rishabdhar12.feature_auth.repo.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -103,7 +104,14 @@ class AuthViewModel @Inject constructor(
                     val saveUserResult = authRepository.saveUser(jsonMap)
                     saveUserResult.fold(
                         onSuccess = { user ->
-                            Log.i("", user)
+                            Log.i("Signup User", user)
+
+                            authRepository.insertUser(UserEntity(
+                                uid = user,
+                                fullName = signUpDTO.fullName.toString(),
+                                phoneNumber = signUpDTO.phoneNumber.toString(),
+                                email = signUpDTO.email.toString(),
+                            ))
                         },
 
                         onFailure = { e->
@@ -158,3 +166,5 @@ class AuthViewModel @Inject constructor(
         }
     }
 }
+
+// TODO: implement get user function and verify the data, then fix the auth state flow.
