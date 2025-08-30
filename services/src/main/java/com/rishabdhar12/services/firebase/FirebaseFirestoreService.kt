@@ -19,4 +19,23 @@ class FirebaseFirestoreService @Inject constructor(
             Result.failure(e)
         }
     }
+
+    suspend fun getUser(userId: String): Result<List<Map<String, Any>>> {
+        return try {
+            val snapshot = fireStore.collection("users")
+//                .document(userId)
+                .whereEqualTo("uid", userId)
+                .get()
+                .await()
+
+            if (!snapshot.isEmpty) {
+                val data = snapshot.documents.mapNotNull { it.data }
+                Result.success(data)
+            } else {
+                Result.failure(Exception("User not found"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

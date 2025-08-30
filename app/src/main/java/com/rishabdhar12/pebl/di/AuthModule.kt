@@ -18,22 +18,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class AuthModule {
 
-    @Provides
-    @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            "pebl_database"
-        ).build()
-    }
-
-    @Provides
-    fun provideUserDao(db: AppDatabase): UserDao = db.userDao()
-
     @Binds
     @Singleton
-    abstract  fun bindAuthRepository (
+    abstract fun bindAuthRepository (
         impl: AuthRepositoryImpl
     ): AuthRepository
 }

@@ -52,26 +52,90 @@ class AuthViewModel @Inject constructor(
     private val _isSignedIn = MutableStateFlow<Boolean?>(null)
     val isSignedIn = _isSignedIn.asStateFlow()
 
+    private val _isSignedUp = MutableStateFlow<Boolean?>(null)
+    val isSignedUp = _isSignedUp.asStateFlow()
+
     var authError = mutableStateOf<String?>(null)
 
     var showDialog  = MutableStateFlow(false)
 
+    private val _user = MutableStateFlow<UserEntity?>(null)
+    val user = _user.asStateFlow()
+
+
+    fun getUser() {
+        viewModelScope.launch {
+            val result = authRepository.getUser()
+
+            result.fold(
+                onSuccess = {
+                    _user.value = it
+                },
+                onFailure = { e ->
+                    authError.value = e.localizedMessage ?: "Something went wrong!"
+                }
+            )
+        }
+    }
 
     fun signInUser() {
         viewModelScope.launch {
             _isLoading.value = true
+
             val result = authRepository.signIn(emailInput.value, passwordInput.value)
 
             result.fold(
-                onSuccess = {
-                    authError.value = null
-                    _isSignedIn.value = true
+                onSuccess = { uid ->
+                    Log.i("Sign In", "User signed in with UID: $uid")
+
+                    val userResult = authRepository.getUserFirebase(uid)
+
+                    userResult.fold(
+                        onSuccess = { users ->
+                            val user = users.firstOrNull()
+                            if (user != null) {
+                                val fullName = user["fullName"] as? String ?: ""
+                                val email = user["email"] as? String ?: ""
+                                val phoneNumber = user["phoneNumber"] as? String ?: ""
+
+                                _user.value = UserEntity(
+                                    uid = uid,
+                                    fullName = fullName,
+                                    email = email,
+                                    phoneNumber = phoneNumber
+                                )
+
+
+                                authRepository.insertUser(UserEntity(
+                                    uid = _user.value!!.uid,
+                                    fullName = _user.value!!.fullName,
+                                    phoneNumber = _user.value!!.phoneNumber,
+                                    email = _user.value!!.email,
+                                ))
+
+                                Log.i("Signup User", "User inserted to room")
+
+                                Log.i("Sign In", "$fullName signed in with UID: $uid")
+
+                                authError.value = null
+                                _isSignedIn.value = true
+                            } else {
+                                showDialog.value = true
+                                authError.value = "No user found with UID $uid"
+                            }
+                        },
+                        onFailure = { e ->
+                            showDialog.value = true
+                            authError.value = e.localizedMessage ?: "Something went wrong!"
+                        }
+                    )
                 },
                 onFailure = { e ->
                     showDialog.value = true
                     authError.value = e.localizedMessage ?: "Something went wrong!"
                 }
             )
+
             _isLoading.value = false
         }
     }
@@ -112,6 +176,10 @@ class AuthViewModel @Inject constructor(
                                 phoneNumber = signUpDTO.phoneNumber.toString(),
                                 email = signUpDTO.email.toString(),
                             ))
+
+                            Log.i("Signup User", "User inserted to room")
+
+                            _isSignedUp.value = true
                         },
 
                         onFailure = { e->
@@ -166,5 +234,3 @@ class AuthViewModel @Inject constructor(
         }
     }
 }
-
-// TODO: implement get user function and verify the data, then fix the auth state flow.

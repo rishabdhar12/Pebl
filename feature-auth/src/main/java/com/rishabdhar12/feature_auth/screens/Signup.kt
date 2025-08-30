@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +31,7 @@ import com.rishabdhar12.core.common.CustomOutlinedTextField
 import com.rishabdhar12.core.common.CustomText
 import com.rishabdhar12.core.common.TopBarWrapper
 import com.rishabdhar12.core.common.strings.PeblColors
+import com.rishabdhar12.core.routes.Routes
 import com.rishabdhar12.feature_auth.viewmodel.AuthViewModel
 
 @Composable
@@ -51,6 +53,17 @@ fun SignUpScreen(navController: NavController, modifier: Modifier = Modifier, vi
     val authError by viewModel.authError
 
     var enabled by rememberSaveable { mutableStateOf(true) }
+
+
+    val isSignedUp by viewModel.isSignedUp.collectAsState()
+
+    LaunchedEffect(isSignedUp) {
+        if (isSignedUp == true) {
+            navController.navigate(Routes.SelectCategoriesRoute) {
+                popUpTo(0) { inclusive = true }
+            }
+        }
+    }
 
     TopBarWrapper(
         showBackButton = true,

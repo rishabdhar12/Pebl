@@ -1,5 +1,6 @@
 package com.rishabdhar12.feature_auth.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,24 +19,42 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.rishabdhar12.core.common.AssetImage
 import com.rishabdhar12.core.common.CustomText
 import com.rishabdhar12.core.common.strings.PeblColors
 import com.rishabdhar12.core.common.strings.PeblIcons
 import com.rishabdhar12.core.routes.Routes
+import com.rishabdhar12.feature_auth.viewmodel.AuthViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun SplashScreen(navController: NavController, modifier: Modifier = Modifier, viewModel: AuthViewModel = hiltViewModel()) {
 
     LaunchedEffect(Unit) {
-        delay(2000)
-        navController.navigate(Routes.LoginOrSignUpRoute) {
-            popUpTo(Routes.SplashRoute) {
-                inclusive = true
+
+        viewModel.getUser()
+        delay(300)
+        Log.i("Splash Screen", viewModel.user.value.toString())
+
+        if(viewModel.user.value != null) {
+            navController.navigate(Routes.SelectCategoriesRoute) {
+                popUpTo(Routes.SplashRoute) {
+                    inclusive = true
+                }
             }
+            return@LaunchedEffect
+        } else {
+            navController.navigate(Routes.LoginOrSignUpRoute) {
+                popUpTo(Routes.SplashRoute) {
+                    inclusive = true
+                }
+            }
+
         }
+
     }
 
     Box(
@@ -53,7 +72,7 @@ fun SplashScreen(navController: NavController, modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(10.dp))
 
             CustomText(
-                text = "Thriftly",
+                text = "Pebl",
                 fontSize = 30.dp,
                 fontWeight = FontWeight.ExtraBold,
 

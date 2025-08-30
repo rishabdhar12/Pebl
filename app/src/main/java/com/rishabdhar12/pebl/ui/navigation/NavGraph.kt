@@ -9,6 +9,7 @@ import com.rishabdhar12.feature_auth.screens.LoginOrSignupScreen
 import com.rishabdhar12.feature_auth.screens.LoginScreen
 import com.rishabdhar12.feature_auth.screens.SignUpScreen
 import com.rishabdhar12.feature_auth.screens.SplashScreen
+import com.rishabdhar12.feature_categories.screens.BudgetAllocationScreen
 import com.rishabdhar12.feature_categories.screens.SelectCategoriesScreen
 
 @Composable
@@ -33,6 +34,10 @@ fun SetupNavGraph(navController: NavHostController) {
 
         composable(Routes.SelectCategoriesRoute) {
             SelectCategoriesScreen(navController = navController)
+        }
+
+        composable(Routes.BudgetAllocationScreen) {
+            BudgetAllocationScreen(navController = navController)
         }
     }
 }

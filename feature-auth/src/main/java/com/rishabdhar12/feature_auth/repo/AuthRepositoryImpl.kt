@@ -14,7 +14,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
 ): AuthRepository{
 
-    override suspend fun signIn(email: String, password: String): Result<Unit> {
+    override suspend fun signIn(email: String, password: String): Result<String> {
         return firebaseAuthService.signInWithEmail(email, password)
     }
 
@@ -32,4 +32,20 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun insertUser(user: UserEntity) = userDao.insertUser(user)
 
+    override suspend fun getUser(): Result<UserEntity> {
+        return try {
+            val user = userDao.getUser()
+            if (user != null) {
+                Result.success(user)
+            } else {
+                Result.failure(Exception("No user found"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getUserFirebase(userId: String):Result<List<Map<String, Any>>> {
+        return firebaseFirestoreService.getUser(userId)
+    }
 }
