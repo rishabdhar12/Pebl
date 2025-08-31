@@ -165,8 +165,13 @@ fun SelectCategoriesScreen(
                 },
                 onClick = {
                     if (viewModel.selectedCategoriesList.isNotEmpty()) {
-                        navController.navigate(Routes.BudgetAllocationScreen)
+//                        navController.navigate(Routes.BudgetAllocationScreen)
+                        navController.navigate(Routes.BudgetAllocationScreen) {
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
+
                 },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -176,7 +181,8 @@ fun SelectCategoriesScreen(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = "Confirm"
                 )
-            }        }
+            }
+        }
     }
 }
 

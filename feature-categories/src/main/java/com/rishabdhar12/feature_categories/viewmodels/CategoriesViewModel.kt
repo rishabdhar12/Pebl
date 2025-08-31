@@ -26,10 +26,10 @@ class CategoriesViewModel @Inject constructor(
     private val _categoriesModel = MutableStateFlow<Categories?>(null)
     val categoriesModel: StateFlow<Categories?> = _categoriesModel
 
-    private val _selectedCategoriesList = mutableStateListOf<SelectedCategoryEntity?>(null)
-    val selectedCategoriesList: List<SelectedCategoryEntity?> get() = _selectedCategoriesList
+    private val _selectedCategoriesList = mutableStateListOf<SelectedCategoryEntity>()
+    val selectedCategoriesList: List<SelectedCategoryEntity> get() = _selectedCategoriesList
 
-    private val _educationList = mutableStateListOf<String>()
+    private val _educationList =  mutableStateListOf<String>()
     val educationList: List<String> get() = _educationList
 
     private val _housingList = mutableStateListOf<String>()
@@ -66,7 +66,6 @@ class CategoriesViewModel @Inject constructor(
                 val result = categoriesRepository.getCategoriesFromRemoteConfig()
                 result.fold(
                     onSuccess = {jsonString ->
-                        _selectedCategoriesList.clear()
                         val categories = Gson().fromJson(jsonString.toString(), Categories::class.java)
                         _categoriesModel.value = categories
                     },
@@ -148,6 +147,3 @@ class CategoriesViewModel @Inject constructor(
         }
     }
 }
-
-// TODO: move to the next page with the model and add values to the list
-//  insert the categories to room and fix the ui from the screenshot.

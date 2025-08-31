@@ -40,7 +40,7 @@ fun SplashScreen(navController: NavController, modifier: Modifier = Modifier, vi
         Log.i("Splash Screen", viewModel.user.value.toString())
 
         if(viewModel.user.value != null) {
-            navController.navigate(Routes.SelectCategoriesRoute) {
+            navController.navigate(Routes.BudgetAllocationScreen) {
                 popUpTo(Routes.SplashRoute) {
                     inclusive = true
                 }
