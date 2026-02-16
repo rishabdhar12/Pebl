@@ -142,7 +142,7 @@ class CategoriesViewModel @Inject constructor(
             list.remove(value)
 
             _selectedCategoriesList.remove(
-                _selectedCategoriesList.find { it?.name == value }
+                _selectedCategoriesList.find { it.name == value }
             )
         }
     }

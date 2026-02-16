@@ -1,5 +1,7 @@
 package com.rishabdhar12.feature_categories.screens
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,7 +21,10 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,20 +38,37 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.rishabdhar12.core.common.CustomOutlinedTextField
 import com.rishabdhar12.core.common.CustomText
 import com.rishabdhar12.core.common.TopBarWrapper
 import com.rishabdhar12.core.common.strings.PeblColors
+import com.rishabdhar12.core.routes.Routes
 import com.rishabdhar12.feature_categories.viewmodels.CategoriesViewModel
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BudgetAllocationScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: CategoriesViewModel = hiltViewModel()
+//    viewModel: CategoriesViewModel = hiltViewModel()
+
 ) {
+
+    val parentEntry = remember {
+        navController.getBackStackEntry(Routes.CategoriesGraph)
+    }
+
+    val viewModel: CategoriesViewModel = hiltViewModel(parentEntry)
+
+    val selectedCategories = viewModel.selectedCategoriesList
+
+    LaunchedEffect(Unit) {
+        Log.i("Length", "${selectedCategories.size}")
+    }
+
     var expanded by remember { mutableStateOf(false) }
     var selectedCurrency by remember { mutableStateOf("USD") }
     var searchQuery by remember { mutableStateOf("") }
@@ -169,6 +191,19 @@ fun BudgetAllocationScreen(
                         )
                     }
                 }
+            }
+
+            selectedCategories.forEach { entity ->
+                CustomText(
+                text = entity.name,
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.dp,
+                color = PeblColors.textColor,
+                letterSpacing = 1.dp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentSize(align = Alignment.CenterStart)
+            )
             }
         }
     }

@@ -1,5 +1,7 @@
 package com.rishabdhar12.feature_categories.screens
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,12 +27,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.rishabdhar12.core.common.CustomText
 import com.rishabdhar12.core.common.TopBarWrapper
@@ -38,12 +42,20 @@ import com.rishabdhar12.core.common.strings.PeblColors
 import com.rishabdhar12.core.routes.Routes
 import com.rishabdhar12.feature_categories.viewmodels.CategoriesViewModel
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun SelectCategoriesScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: CategoriesViewModel = hiltViewModel()
+//    viewModel: CategoriesViewModel = hiltViewModel()
 ) {
+    val parentEntry = remember {
+        navController.getBackStackEntry(Routes.CategoriesGraph)
+    }
+
+    val viewModel: CategoriesViewModel = hiltViewModel(parentEntry)
+
+
     val scrollState = rememberScrollState()
     val categoriesState = viewModel.categoriesModel.collectAsState()
 
@@ -165,6 +177,7 @@ fun SelectCategoriesScreen(
                 },
                 onClick = {
                     if (viewModel.selectedCategoriesList.isNotEmpty()) {
+                        Log.i("Length", "${viewModel.selectedCategoriesList.size}")
 //                        navController.navigate(Routes.BudgetAllocationScreen)
                         navController.navigate(Routes.BudgetAllocationScreen) {
                             launchSingleTop = true
@@ -215,7 +228,7 @@ fun CategorySection(
                 FilterChip(
                     onClick = { onClick(item) },
                     label = { Text(item) },
-                    selected = isSelected(item), // ✅ now correct per-item
+                    selected = isSelected(item),
                 )
             }
         }
